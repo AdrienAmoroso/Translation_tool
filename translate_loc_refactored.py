@@ -18,6 +18,9 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
+# Add src directory to path
+sys.path.insert(0, str(Path(__file__).parent / "src"))
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text

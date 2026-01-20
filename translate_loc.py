@@ -1,7 +1,12 @@
 import os
+import sys
 import hashlib
 from dataclasses import dataclass
 from typing import List, Dict, Any
+from pathlib import Path
+
+# Add src directory to path
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 import pandas as pd
 from openpyxl import load_workbook
