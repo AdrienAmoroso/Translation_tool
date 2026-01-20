@@ -375,3 +375,52 @@ Both versions work identically. New version has:
 **Team Ready:** YES  
 
 For quick reference, see `QUICK_START.md`
+
+---
+
+## Git & Version Control
+
+### Initial Setup (Already Done!)
+```bash
+# Repository initialized
+git init
+git config user.email "adrien.amoroso@etu.univ-tours.fr"
+git config user.name "AdrienAmoroso"
+```
+
+### Making Changes
+```bash
+# See what changed
+git status
+
+# Stage changes
+git add .
+
+# Commit with message
+git commit -m "Feature: describe what you changed"
+
+# View history
+git log --oneline
+```
+
+### Pushing to Remote
+```bash
+# Add remote (one time)
+git remote add origin https://github.com/YOUR_USERNAME/tm_loc_mt.git
+
+# Push to GitHub
+git push -u origin master
+```
+
+### .gitignore Rules
+- Ignores: Python cache, logs, temp files, .env
+- Keeps: Source code, documentation, config examples
+- Keeps: Excel data files (localization.xlsx)
+
+### Common Workflow
+```bash
+# 1. Make changes to code
+# 2. Test locally with: ./run_translation.bat
+# 3. Commit: git commit -am "what I changed"
+# 4. Push: git push
+```
