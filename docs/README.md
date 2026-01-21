@@ -8,15 +8,6 @@ This tool automates the translation of in-game text from Excel-based localizatio
 
 ## Quick Start
 
-### For Users
-```bash
-# Simply run:
-./scripts/run_translation.bat
-
-# Or from Python:
-python translate_loc_refactored.py
-```
-
 ### For Setup (First Time Only)
 ```powershell
 python -m venv .venv
@@ -27,6 +18,15 @@ Create `.env` with your API key:
 ```
 GEMINI_API_KEY=your_key_here
 OPENAI_API_KEY=your_key_here
+```
+
+### For Users
+```bash
+# Simply run:
+./scripts/run_translation.bat
+
+# Or from Python:
+python translate_loc.py
 ```
 
 ## Features
