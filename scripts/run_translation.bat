@@ -62,7 +62,7 @@ echo.
 echo Starting translation pipeline...
 echo.
 
-.\.venv\Scripts\python.exe translate_loc_refactored.py
+.\.venv\Scripts\python.exe translate_loc.py
 
 REM Capture exit code
 set EXIT_CODE=%ERRORLEVEL%
