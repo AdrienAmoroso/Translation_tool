@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 from typing import List, Dict
 
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeRemainingColumn, MofNCompleteColumn
+from rich.progress import Progress, TextColumn, BarColumn, TimeRemainingColumn, MofNCompleteColumn
 from rich.console import Console
 
 from models import Segment, TranslationResult
@@ -72,7 +72,6 @@ class LocalizationEngine:
             
             # Generate HTML report
             html_path = HTMLReportService.generate_report(self.keys_log_path, run_id, self.config)
-            console.print(f"\n[bold cyan] Report generated: [/bold cyan][cyan]{html_path.name}[/cyan]")
             logger.info(f"HTML report generated: {html_path}")
         
         except Exception as e:
@@ -87,54 +86,63 @@ class LocalizationEngine:
         # Load segments
         segments = self.excel_service.load_segments_from_sheet(sheet_name)
         segments_to_translate = [s for s in segments if s.needs_translation()]
+        donottranslate_segments = [s for s in segments if s.donottranslate and s.source_text and s.source_text.strip()]
         
-        if not segments_to_translate:
-            logger.info(f"[{sheet_name}] No segments to translate")
+        if not segments_to_translate and not donottranslate_segments:
+            logger.info(f"[{sheet_name}] No segments to process")
             return 0
         
-        logger.debug(f"[{sheet_name}] {len(segments_to_translate)} segments to translate")
-        
-        # Build batches
-        batches = self._build_batches(segments_to_translate)
-        logger.debug(f"[{sheet_name}] {len(batches)} batches created")
+        logger.debug(f"[{sheet_name}] {len(segments_to_translate)} segments to translate, {len(donottranslate_segments)} donottranslate")
         
         # Process batches with progress bar
         all_translations = {}
-        with Progress(
-            SpinnerColumn(),
-            TextColumn(f"[cyan]{sheet_name}[/cyan]"),
-            BarColumn(),
-            MofNCompleteColumn(),
-            TimeRemainingColumn(),
-            console=console,
-        ) as progress:
-            task = progress.add_task(f"Translating {sheet_name}", total=len(batches))
+        
+        # First, handle donottranslate segments (just copy source)
+        if donottranslate_segments:
+            logger.debug(f"[{sheet_name}] Processing {len(donottranslate_segments)} donottranslate segments")
+            for seg in donottranslate_segments:
+                all_translations[seg.row_idx] = seg.source_text
+                self._log_key(seg.sheet, seg.key, seg.row_idx, "COPIED_SOURCE")
+        
+        # Then, translate remaining segments
+        if segments_to_translate:
+            batches = self._build_batches(segments_to_translate)
+            logger.debug(f"[{sheet_name}] {len(batches)} batches created")
             
-            for i, batch in enumerate(batches, start=1):
-                logger.debug(f"[{sheet_name}] Processing batch {i}/{len(batches)} ({len(batch)} segments)")
+            with Progress(
+                TextColumn(f"[cyan]{sheet_name}[/cyan]"),
+                BarColumn(),
+                MofNCompleteColumn(),
+                TimeRemainingColumn(),
+                console=console,
+            ) as progress:
+                task = progress.add_task(f"Translating {sheet_name}", total=len(batches))
                 
-                try:
-                    batch_translations = self._process_batch(sheet_name, batch)
-                    all_translations.update(batch_translations)
+                for i, batch in enumerate(batches, start=1):
+                    logger.debug(f"[{sheet_name}] Processing batch {i}/{len(batches)} ({len(batch)} segments)")
                     
-                    progress.update(task, advance=1)
+                    try:
+                        batch_translations = self._process_batch(sheet_name, batch)
+                        all_translations.update(batch_translations)
+                        
+                        progress.update(task, advance=1)
+                        
+                        # Cooldown between batches
+                        if i < len(batches):
+                            logger.debug(f"[{sheet_name}] Cooldown {self.config.translation.batch_cooldown_seconds}s...")
+                            time.sleep(self.config.translation.batch_cooldown_seconds)
                     
-                    # Cooldown between batches
-                    if i < len(batches):
-                        logger.debug(f"[{sheet_name}] Cooldown {self.config.translation.batch_cooldown_seconds}s...")
-                        time.sleep(self.config.translation.batch_cooldown_seconds)
-                
-                except Exception as e:
-                    logger.error(f"[{sheet_name}] Batch {i} failed: {e}")
-                    progress.update(task, advance=1)
-                    # Continue with next batch instead of stopping
-                    continue
+                    except Exception as e:
+                        logger.error(f"[{sheet_name}] Batch {i} failed: {e}")
+                        progress.update(task, advance=1)
+                        # Continue with next batch instead of stopping
+                        continue
         
         # Write to Excel
         if all_translations:
             self.excel_service.write_translations(sheet_name, all_translations)
         
-        logger.info(f"[{sheet_name}] Translated {len(all_translations)} segments")
+        logger.info(f"[{sheet_name}] Processed {len(all_translations)} segments")
         return len(all_translations)
     
     def _process_batch(self, sheet_name: str, batch: List[Segment]) -> Dict[int, str]:
@@ -200,7 +208,6 @@ class LocalizationEngine:
         total_filled = 0
         
         with Progress(
-            SpinnerColumn(),
             TextColumn(f"[yellow]{sheet_name} (gaps)[/yellow]"),
             BarColumn(),
             MofNCompleteColumn(),

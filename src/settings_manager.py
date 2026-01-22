@@ -93,7 +93,7 @@ class SettingsManager:
         # Target Language
         target_lang = Prompt.ask(
             "[bold]Target Language[/bold]",
-            default="Portuguese_BR",
+            default="English",
             show_default=True
         )
         
@@ -119,7 +119,7 @@ class SettingsManager:
         
         # Batch Size
         batch_size = Prompt.ask(
-            "[bold]Batch Size[/bold] (20-50 recommended)",
+            "[bold]Batch Size[/bold]",
             default="50",
             show_default=True
         )

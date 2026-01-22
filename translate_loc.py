@@ -46,16 +46,10 @@ def setup_logging(config: Config) -> str:
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(detailed_formatter)
     
-    # Console handler: only show WARNING and ERROR to avoid cluttering UI
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.WARNING)
-    console_handler.setFormatter(detailed_formatter)
-    
-    # Configure root logger
+    # Configure root logger (file only, no console output for logs)
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
     root_logger.addHandler(file_handler)
-    root_logger.addHandler(console_handler)
     
     # Suppress verbose third-party loggers
     logging.getLogger("urllib3").setLevel(logging.ERROR)
