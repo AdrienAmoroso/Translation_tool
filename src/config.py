@@ -6,60 +6,22 @@ from typing import List
 import os
 from dotenv import load_dotenv
 
+from settings_manager import load_settings
+
+# Load settings from settings.ini (or run setup wizard if not exists)
+_settings = load_settings()
 
 # ============================================================================
-# MODIFY THESE SETTINGS TO CHANGE TRANSLATION BEHAVIOR
+# CONFIGURATION (now loaded from settings.ini)
 # ============================================================================
 
-# Target language for translation
-TARGET_LANG = "Portuguese_BR"
-
-# Column name for target language translations in Excel
-TARGET_COL = "Portuguese"
-
-# Which sheets to translate (modify this list to control which sheets are processed)
-SHEETS_TO_TRAD = [
-#    "Default",
-#    "Sandbox",
-#    "GEO",
-#    "TENNIS",
-#    "MANAGER",
-#    "EQUIP",
-#    "TRAINING",
-    "MATCH",
-    "STAFF",
-#    "INBOX",
-#    "PLAYER",
-#    "ACADEMY",
-#    "SCENARIOS",
-#    "TUTO",
-#    "FC",
-#    "MEDIA",
-#    "LD_INBOX",
-#    "LD_RADIO",
-#    "UI",
-#    "WORLD",
-#    "LD_BRIEFING",
-#    "LD_OBJ_CA",
-#    "LD_OBJ_PLY",
-#    "LD_RPT_TRAIN",
-#    "LD_TALK",
-#    "LD_ADVICES",
-#    "MP_UI",
-#    "MP_ATT",
-#    "MP_NEWS",
-#    "MP_SKILLS",
-#    "MP_TUTO"
-]
-
-# Batch size for API calls (number of segments per batch)
-BATCH_SIZE = 50
-
-# Rate limiting: cooldown seconds between batches (prevents API throttling)
-BATCH_COOLDOWN_SECONDS = 22.0
-
-# Use Gemini API (True) or OpenAI API (False)
-USE_GEMINI = True
+TARGET_LANG = _settings["target_language"]
+TARGET_COL = _settings["target_column"]
+SHEETS_TO_TRAD = _settings["sheets"]
+BATCH_SIZE = _settings["batch_size"]
+BATCH_COOLDOWN_SECONDS = _settings["batch_cooldown_seconds"]
+USE_GEMINI = _settings["provider"] == "gemini"
+EXCEL_FILE = _settings["excel_file"]
 
 GEMINI_MODEL = "gemini-2.5-flash-lite"
 OPENAI_MODEL = "gpt-4o-mini"
@@ -72,14 +34,14 @@ OPENAI_MODEL = "gpt-4o-mini"
 @dataclass
 class APIConfig:
     """API configuration for OpenAI and Gemini."""
-    use_gemini: bool = True
+    use_gemini: bool = USE_GEMINI
     gemini_model: str = GEMINI_MODEL
     openai_model: str = OPENAI_MODEL
     gemini_api_key: str = ""
     openai_api_key: str = ""
-    max_retries_openai: int = 5
-    max_retries_gemini: int = 5
-    rate_limit_wait: float = 25.0
+    max_retries_openai: int = _settings["max_retries"]
+    max_retries_gemini: int = _settings["max_retries"]
+    rate_limit_wait: float = _settings["rate_limit_wait"]
     
     def validate(self) -> None:
         """Validate that required API keys are configured."""
@@ -109,7 +71,7 @@ class TranslationConfig:
 @dataclass
 class ExcelConfig:
     """Excel file configuration."""
-    excel_path: str = "localization.xlsx"
+    excel_path: str = EXCEL_FILE
     keys_column: str = "Keys"
     comment_column: str = "$comment"
     donottranslate_column: str = "$donottranslate"

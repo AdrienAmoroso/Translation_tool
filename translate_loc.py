@@ -86,9 +86,21 @@ def main() -> int:
         config_text.append(f"Sheets to Translate: ", style="bold")
         config_text.append(f"{', '.join(config.translation.sheets_to_translate)}\n", style="green")
         config_text.append(f"Batch Size: ", style="bold")
-        config_text.append(f"{config.translation.batch_size}", style="green")
+        config_text.append(f"{config.translation.batch_size}\n", style="green")
+        config_text.append(f"API Provider: ", style="bold")
+        config_text.append(f"{'Gemini' if config.api.use_gemini else 'OpenAI'}\n", style="green")
+        config_text.append(f"Config File: ", style="dim")
+        config_text.append(f"settings.ini", style="cyan")
         
         console.print(Panel(config_text, title="Configuration", border_style="yellow"))
+        
+        # Show how to modify settings
+        info_text = Text()
+        info_text.append("Tip: ", style="bold yellow")
+        info_text.append("Edit ", style="dim")
+        info_text.append("settings.ini", style="cyan")
+        info_text.append(" to change configuration", style="dim")
+        console.print(Panel(info_text, border_style="dim yellow"))
         
         # Create run log
         keys_log_path = config.logging.logs_dir / f"mt_keys_{run_id}.csv"
