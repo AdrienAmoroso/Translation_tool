@@ -48,8 +48,11 @@ OPENAI_API_KEY=your_key_here
 
 #### Step 4: Configure Translation Settings
 Run the tool once - it will ask you questions:
-#### Option A: Using Batch Script (Easiest)
-Simply double-click:
+
+The batch script at `scripts/run_translation.bat` will **only work after you complete steps 1-3**. For the first run, use Option B below:
+
+#### Option A: Using Batch Script (After first run)
+Once setup is complete, you can double-click:
 ```
 scripts/run_translation.bat
 ```
@@ -199,11 +202,26 @@ Full execution trace with:
 
 ## Troubleshooting
 
-### "Virtual environment not found"
-Run setup steps again:
+### "ModuleNotFoundError: No module named 'rich'" (when running .bat file)
+The batch file couldn't find the virtual environment packages.
+
+**Solution:** Make sure you completed the setup properly:
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\pip install -r requirements.txt
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+Then try the .bat file again.
+
+### "Virtual environment not found"
+The `.venv` folder doesn't exist.
+
+**Solution:** Run these commands in PowerShell (from project root):
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
 ### "API error - retrying"

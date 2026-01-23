@@ -53,6 +53,9 @@ if not exist ".\.env" (
 REM Clear screen
 cls
 
+REM Activate the virtual environment
+call .\.venv\Scripts\activate.bat
+
 REM Run the translation pipeline
 echo.
 echo ====================================================================
@@ -62,7 +65,7 @@ echo.
 echo Starting translation pipeline...
 echo.
 
-.\.venv\Scripts\python.exe translate_loc.py
+python translate_loc.py
 
 REM Capture exit code
 set EXIT_CODE=%ERRORLEVEL%
