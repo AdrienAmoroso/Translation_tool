@@ -110,7 +110,7 @@ By default, the tool uses a generic translation prompt suitable for any domain. 
 
 Best for complex, multi-line prompts or domain-specific instructions.
 
-**Step 1:** Create or edit `custom_prompt.txt` in the project root with your translation instructions:
+**Step 1:** Create or edit `custom_prompt.txt` in the project root with your translation instructions. You can use this template :
 
 ```
 You are translating for a video game called "Tennis Manager".
@@ -162,21 +162,6 @@ Comment out both options in `settings.ini`:
 # ai_prompt_file = custom_prompt.txt
 # ai_prompt = 
 ```
-
-#### Verify Which Prompt Is Being Used
-
-To check that your custom prompt is loaded:
-
-1. **Check settings.ini** - Make sure `ai_prompt_file` is uncommented:
-   ```ini
-   ai_prompt_file = custom_prompt.txt  # Should NOT have # at the start
-   ```
-
-2. **Check the custom_prompt.txt file exists** - It should be in the project root (same level as settings.ini)
-
-3. **Look at the first translation's quality** - If your custom instructions are being used, you'll see results matching your prompt's rules
-
-4. **Check logs** - The detailed logs in `logs/mt_run_*.log` show which segments were translated and any errors
 
 ---
 
