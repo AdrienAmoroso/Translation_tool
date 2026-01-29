@@ -164,5 +164,3 @@ max_retries = 5
 **Adrien Amoroso** — [GitHub](https://github.com/AdrienAmoroso)
 
 ---
-
-*Built with Python • Powered by AI • Production Ready*
