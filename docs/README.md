@@ -1,6 +1,6 @@
 # Localization Translation Tool
 
-> AI-powered batch translation pipeline for Excel-based localization files with placeholder preservation and validation.
+> Translation pipeline that uses AI APIs (OpenAI, Gemini) to translate Excel localization files
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
@@ -12,13 +12,13 @@
 
 ## What It Demonstrates
 
-- **API Integration** — Dual support for OpenAI GPT-4 and Google Gemini with retry logic and rate limiting
-- **Data Pipeline Architecture** — Batch processing with validation, gap-filling, and rollback safety
-- **Placeholder Protection** — Regex-based token extraction/restoration preserving `{[var]}` and `<tag>` patterns
-- **Clean Code Practices** — Service-oriented architecture, dataclasses, type hints, comprehensive logging
-- **Testing** — 42 unit tests with pytest covering core validation logic (100% coverage on critical modules)
-- **CI/CD** — GitHub Actions pipeline with Ruff linting, pytest, and build verification
-- **User Experience** — Interactive setup wizard, Rich CLI progress bars, INI-based configuration
+- **API Integration** - Dual support for OpenAI GPT-4 and Google Gemini with retry logic and rate limiting
+- **Data Pipeline Architecture** - Batch processing with validation, gap-filling, and rollback safety
+- **Placeholder Protection** - Regex-based token extraction/restoration preserving `{[var]}` and `<tag>` patterns
+- **Clean Code Practices** - Service-oriented architecture, dataclasses, type hints, comprehensive logging
+- **Testing** - 42 unit tests with pytest covering core validation logic (100% coverage on critical modules)
+- **CI/CD** - GitHub Actions pipeline with Ruff linting, pytest, and build verification
+- **User Experience** - Interactive setup wizard, Rich CLI progress bars, INI-based configuration
 
 ---
 
