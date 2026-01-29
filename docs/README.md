@@ -73,7 +73,7 @@ python translate_loc.py
 
 **Data Flow:**
 ```
-Excel → Load Segments → Protect Placeholders → Batch Translate → Validate → Restore → Write Excel
+Excel -> Load Segments -> Protect Placeholders -> Batch Translate -> Validate -> Restore -> Write Excel
 ```
 
 ---
@@ -91,7 +91,7 @@ python -m pytest tests/ --cov=src --cov-report=term-missing
 ruff check src/ tests/
 ```
 
-**Results:** ✅ 42 tests passing | 100% coverage on models, utils, validation_service
+**Results:** 42 tests passing | 100% coverage on models, utils, validation_service
 
 ---
 
@@ -120,7 +120,7 @@ ruff check src/ tests/
 | Feature | Description |
 |---------|-------------|
 | **Batch Processing** | Configurable batch sizes (default: 50 segments) |
-| **Placeholder Safety** | `{[player]}` → `__VAR0__` → translated → `{[player]}` |
+| **Placeholder Safety** | `{[player]}` -> `__VAR0__` -> translated -> `{[player]}` |
 | **Gap Filling** | Auto-detects and retries failed translations |
 | **Custom Prompts** | Domain-specific AI instructions via external file |
 | **Status Reports** | CSV logs with OK / MISSING_TOKENS / COPIED_SOURCE |
